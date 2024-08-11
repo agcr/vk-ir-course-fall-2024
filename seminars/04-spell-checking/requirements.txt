@@ -1,0 +1,6 @@
+notebook
+torch==2.2.2
+transformers==4.39.3
+deeppavlov==1.6.0
+pandas==1.5.3
+tqdm==4.64.1
