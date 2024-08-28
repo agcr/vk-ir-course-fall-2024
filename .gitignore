@@ -161,3 +161,4 @@ cython_debug/
 
 # Environment
 .venvs
+.DS_Store
