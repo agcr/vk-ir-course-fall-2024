@@ -17,7 +17,7 @@
 - будет установлен python, "официальная" версия на которой мы сами проверяли код это python 3.12 (но и на более ранних скорее всего все заведется)
 - будут доступны шелл (предпочтительно bash) и стандартные утилиты UNIX такие как ls и т.д.
 
-Теперь предположим, что мы хотим запустить ноутбук _seminars/8-learning-to-rank/catboost_ltr.ipynb_ из 8-го семинара про машинное обучение ранжированию.
+Теперь предположим, что мы хотим запустить ноутбук _seminars/08-learning-to-rank/catboost_ltr.ipynb_ из 8-го семинара про машинное обучение ранжированию.
 
 Сначала потребуется создать виртуальное окружение (ВНИМАНИЕ: для каждого семинара это окружение свое!).
 
@@ -30,16 +30,16 @@ $ cd ДИРЕКТОРИЯ-В-КОТОРУЮ-ВЫ-СКЛОНИРОВАЛИ-РЕП
 $ mkdir -p .venvs
 
 # Создадим виртуальное окружение для семинара
-$ python3 -m venv .venvs/seminar-8
+$ python3 -m venv .venvs/seminar-08-learning-to-rank
 ```
 
 Теперь надо активировать окружение и поставить в него пакеты, перечисленные в файлике _ПАПКА-СЕМИНАРА/requirements.txt_:
 ```bash
 # Активируем окружение
-$ source .venvs/seminar-8/bin/activate
+$ source .venvs/seminar-08-learning-to-rank/bin/activate
 
 # Ставим пакеты
-$ pip install -r seminars/8-learning-to-rank/requirements.txt
+$ pip install -r seminars/08-learning-to-rank/requirements.txt
 
 # Смотрим что поставилось
 $ pip list
