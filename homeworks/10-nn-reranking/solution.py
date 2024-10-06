@@ -8,7 +8,6 @@ from timeit import default_timer as timer
 def main():
     # Парсим опции командной строки
     parser = argparse.ArgumentParser(description='Neural ranking homework solution')
-    parser.add_argument('--sample_submission_file', required=True, help='input Kaggle sample submission file')
     parser.add_argument('--submission_file', required=True, help='output Kaggle submission file')
     parser.add_argument('data_dir', help='input data directory')
     args = parser.parse_args()
@@ -28,9 +27,9 @@ def main():
     # Дальше вы должны:
     # - загрузить датасет VK MARCO из папки args.data_dir
     # - обучить модель с использованием train- и dev-сплитов датасета
-    # - загрузить пример сабмишна из args.sample_submission_file
-    # - применить обученную модель ко всем запросам и документам из args.sample_submission_file
-    # - переранжировать документы из args.sample_submission_file в соответствии с предиктами вашей модели
+    # - загрузить пример сабмишна из args.data_dir/sample_submission.csv
+    # - применить обученную модель ко всем запросам и документам из примера сабмишна
+    # - переранжировать документы из примера сабмишна в соответствии с предиктами вашей модели
     # - сформировать ваш сабмишн для заливки на Kaggle и сохранить его в файле args.submission_file
 
     # Репортим время работы скрипта
