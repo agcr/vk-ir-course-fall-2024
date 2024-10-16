@@ -57,9 +57,9 @@
 Первый раз в режиме обучения модели: `./solution.py --train --model_file=output.model learning-to-rank-homework-vk-ir-fall-2024`
 
 Подробнее про параметры:
-- learning-to-rank-homework-vk-ir-fall-2024 -- это путь к папке с данными контеста (т.е. это те самые данные, которые можно скачать с Kaggle командой `kaggle competitions download -c learning-to-rank-homework-vk-ir-fall-2024`)
-- --model_file -- файл, в котором ваш скрипт должен сохранить обученную модель (т.е. в данном примере она сохраняется как output.model)
-- --train -- флаг, включающий режим обучения модели
+- _learning-to-rank-homework-vk-ir-fall-2024_ -- это путь к папке с данными контеста (т.е. это те самые данные, которые можно скачать с Kaggle командой `kaggle competitions download -c learning-to-rank-homework-vk-ir-fall-2024`)
+- _--model_file_ -- файл, в котором ваш скрипт должен сохранить обученную модель (т.е. в данном примере она сохраняется как output.model)
+- _--train_ -- флаг, включающий режим обучения модели
 
 Ожидаем, что в этом режиме ваш скрипт обучит модель ранжирования и сохранит ее в файлике output.model.
 
