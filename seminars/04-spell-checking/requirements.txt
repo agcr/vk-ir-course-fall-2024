@@ -2,12 +2,12 @@ datasets
 razdel
 swig==3.0.6
 jamspell
-tqdm
+tqdm==4.64.1
+torch==2.2.2
 textdistance
 timeout-decorator
 numpy
-pandas
+pandas==1.5.3
 pyaspeller
 requests
-nltk
-scikit-learn
+notebook
