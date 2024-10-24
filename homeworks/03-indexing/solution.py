@@ -76,7 +76,7 @@ def main():
                     for line in tqdm.tqdm(f_objects, desc="Iteration through objects"):
                         line_values = line.strip().split(',')
                         object_id, query_id, document_id = line_values
-                        # document_id = document_id.strip()
+
                         if query_id != prev_query_id:
                             query_text = f_query_txt.readline().strip().split('\t')[1]
                             query_tokens = preprocess(query_text)
