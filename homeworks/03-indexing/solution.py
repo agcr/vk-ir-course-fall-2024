@@ -1,19 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-python3 solution.py --build_index --index_dir=index boolean-retrieval-homework-vk-ir-fall-2024
-python3 solution.py --submission_file=submission.csv --index_dir=index boolean-retrieval-homework-vk-ir-fall-2024
-"""
+./solution.py --build_index --index_dir=index boolean-retrieval-homework-vk-ir-fall-2024
 
-"""Indexing homework solution"""
+./solution.py --submission_file=submission.csv --index_dir=index boolean-retrieval-homework-vk-ir-fall-2024
+
+systemd-run --quiet --user --scope -p MemoryMax=100M -p MemorySwapMax=0 ./solution.py --submission_file=submission.csv --index_dir=index boolean-retrieval-homework-vk-ir-fall-2024
+"""
 
 import argparse
 from timeit import default_timer as timer
-import json
 import os 
-import pandas as pd
+import pickle
+import csv
 
 from nltk import tokenize
+
+import psutil  # Импортируем библиотеку psutil для мониторинга памяти
+
+TOTAL_RELEVANT = []
+
+def print_memory_usage():
+    process = psutil.Process(os.getpid())
+    memory_info = process.memory_info()
+    print(f"Используемая память: {memory_info.rss / (1024 * 1024):.2f} MB")
 
 def preprocess(text):
     # Tokenize
@@ -22,6 +32,9 @@ def preprocess(text):
 
     # Normalize
     return [token.lower() for token in tokens]
+
+def transform_docid(docid):
+    return int(docid[3:])
 
 def get_relevant_docs(words, index):
     relevant_docs = None
@@ -49,16 +62,15 @@ def main():
     parser.add_argument('data_dir', help='input data directory')
     args = parser.parse_args()
 
-    # Будем измерять время работы скрипта
     start = timer()
-
-    # Какой у нас режим: построения индекса или генерации сабмишна?
+    print_memory_usage()
     if args.build_index:
         index = {}
         with open(args.data_dir + "/vkmarco-docs.tsv", "r") as pages:
             for line in pages:
                 fields = line.rstrip('\n').split('\t')
                 docid, url, title, body = fields
+                docid = transform_docid(docid)
                 total_text = preprocess(title + " " + body)
                 for word in total_text:
                     if word not in index:
@@ -67,44 +79,42 @@ def main():
                         index[word].append(docid)
         if not os.path.exists(args.index_dir):
             os.makedirs(args.index_dir)
-        with open(args.index_dir + "/index.json", "w", encoding="utf-8") as file_index:
-            json.dump(index, file_index)
-        # Тут вы должны:
-        # - загрузить тексты документов из файла args.data_dir/vkmarco-docs.tsv
-        # - проиндексировать эти тексты, причем для разбиения текстов на слова (термины) надо воспользоваться функцией preprocess()
-        # - сохранить получивший обратный индекс в папку переданную через параметр args.index_dir
+        with open(args.index_dir + "/index.pkl", "wb") as file_index:
+            pickle.dump(index, file_index)
     else:
         index = {}
-        with open(args.index_dir + "/index.json", "r", encoding="utf-8") as file_index:
-            index = json.load(file_index)
-
+        with open(args.index_dir + "/index.pkl", "rb") as file_index:
+            index = pickle.load(file_index)
+        print_memory_usage()
         with open(args.data_dir + "/vkmarco-doceval-queries.tsv", "r") as querys:
             for line in querys:
                 fields = line.rstrip('\n').split('\t')
                 query_id, query_text = fields
                 query_words = preprocess(query_text)
                 relevant_docs = get_relevant_docs(query_words, index)
-                print(relevant_docs, "\n")
                 for doc in relevant_docs:
                     TOTAL_RELEVANT.append((query_id, doc))
-        
-        df = pd.read_csv(args.data_dir + "/objects.csv")
-        df['Label'] = df.apply(is_relevant, axis=1)
-        df.drop(columns=['QueryId', 'DocumentId'], axis=1, inplace=True)
-        df.to_csv(args.data_dir + "/" + args.submission_file, index=False)
-        
-        # Тут вы должны:
-        # - загрузить поисковые запросы из файла args.data_dir/vkmarco-doceval-queries.tsv
-        # - прогнать запросы через индекс и, для каждого запроса, найти все документы, в которых есть все слова (термины) из запроса.
-        # - для разбиения текстов запросов на слова тоже используем функцию preprocess()
-        # - сформировать ваш сабмишн, в котором для каждого объекта (пары запрос-документ) будет проставлена метка 1 (в документе есть все слова из запроса) или 0
-        #
-        # Для формирования сабмишна надо загрузить и использовать файлы args.data_dir/sample_submission.csv и args.data_dir/objects.csv
+        print_memory_usage()
+        result = []
+        with open(args.data_dir + "/objects.csv", newline='', encoding='utf-8') as csv_file:
+            csv_reader = csv.reader(csv_file)            
+            header = next(csv_reader)
+            for row in csv_reader:
+                ObjectId, QueryId, DocumentId = row[0], row[1], row[2]
+                DocumentId = transform_docid(DocumentId)
+                if (QueryId, DocumentId) in TOTAL_RELEVANT:
+                    result.append((ObjectId, 1))
+                else:
+                    result.append((ObjectId, 0))
+        with open(args.data_dir + "/" + args.submission_file, mode='w', newline='', encoding='utf-8') as file:
+            csv_writer = csv.writer(file)
+            csv_writer.writerow(['ObjectId', 'Label'])
+            for row in result:
+                csv_writer.writerow(row)
 
-    # Репортим время работы скрипта
     elapsed = timer() - start
     print(f"finished, elapsed = {elapsed:.3f}")
-
+    print_memory_usage()
 
 if __name__ == "__main__":
     main()
