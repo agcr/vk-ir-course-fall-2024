@@ -13,24 +13,36 @@ from timeit import default_timer as timer
 import os 
 import pickle
 import csv
+import gc
 
-from nltk import tokenize
+MAX_DOCID = 1254065
+
+import sys
 
 import psutil  # Импортируем библиотеку psutil для мониторинга памяти
 
 TOTAL_RELEVANT = []
+EXPECTED_SYBMBOLS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789"
 
 def print_memory_usage():
     process = psutil.Process(os.getpid())
     memory_info = process.memory_info()
     print(f"Используемая память: {memory_info.rss / (1024 * 1024):.2f} MB")
 
+def onle_expected_symbols(word):
+    global EXPECTED_SYBMBOLS
+    for char in word:
+        if char not in EXPECTED_SYBMBOLS:
+            return False
+    return True
+
 def preprocess(text):
+    from nltk import tokenize
+
     # Tokenize
     tokenizer = tokenize.RegexpTokenizer(r'\w+')
     tokens = tokenizer.tokenize(text)
 
-    # Normalize
     return [token.lower() for token in tokens]
 
 def transform_docid(docid):
@@ -53,6 +65,25 @@ def is_relevant(row):
         return 1
     return 0
 
+
+def write_index(path, index):
+    # total_index = []
+    print(f"Размер индекса в MB {sys.getsizeof(index) / (1024 * 1024)}")
+
+    # for key in sorted(index):
+    #     total_index.append([key, *sorted(index[key])])
+    with open("test.pkl", "wb") as file:
+        pickle.dump(index, file)
+    # print(f"Размер преобразованного индекса в MB {sys.getsizeof(total_index) / (1024 * 1024)}")
+
+
+def read_index(path):
+    index = {}
+    with open(path, "rb") as file:
+        index = pickle.load(file)
+    return index
+
+
 def main():
     global TOTAL_RELEVANT
     parser = argparse.ArgumentParser(description='Indexing homework solution')
@@ -63,9 +94,12 @@ def main():
     args = parser.parse_args()
 
     start = timer()
+    # write_index("test.txt", {'c': [1, 2, 3], 'a': [5, 6], 'b': [10]})
+    # print(read_index("test.txt"))
+    # return
     print_memory_usage()
     if args.build_index:
-        index = {}
+        index = dict()
         with open(args.data_dir + "/vkmarco-docs.tsv", "r") as pages:
             for line in pages:
                 fields = line.rstrip('\n').split('\t')
@@ -73,18 +107,30 @@ def main():
                 docid = transform_docid(docid)
                 total_text = preprocess(title + " " + body)
                 for word in total_text:
+                    if not onle_expected_symbols(word):
+                        continue
                     if word not in index:
                         index[word] = [docid]
                     else:
                         index[word].append(docid)
+        gc.collect()
         if not os.path.exists(args.index_dir):
             os.makedirs(args.index_dir)
-        with open(args.index_dir + "/index.pkl", "wb") as file_index:
-            pickle.dump(index, file_index)
+        print_memory_usage()
+        write_index("test.pkl", index)
+
     else:
+        # index = read_index("test.txt")
         index = {}
-        with open(args.index_dir + "/index.pkl", "rb") as file_index:
-            index = pickle.load(file_index)
+        print_memory_usage()
+        with open("test.pkl", "rb") as file:
+            index = pickle.load(file)
+            gc.collect()
+        # with open(args.index_dir + "/index.pkl", "rb") as file_index:
+        #     index = pickle.load(file_index)
+        print(f"Размер индекса в MB {sys.getsizeof(index) / (1024 * 1024)}")
+        print_memory_usage()
+        return 
         print_memory_usage()
         with open(args.data_dir + "/vkmarco-doceval-queries.tsv", "r") as querys:
             for line in querys:
@@ -106,6 +152,7 @@ def main():
                     result.append((ObjectId, 1))
                 else:
                     result.append((ObjectId, 0))
+        print_memory_usage()
         with open(args.data_dir + "/" + args.submission_file, mode='w', newline='', encoding='utf-8') as file:
             csv_writer = csv.writer(file)
             csv_writer.writerow(['ObjectId', 'Label'])
