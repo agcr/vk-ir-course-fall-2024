@@ -13,33 +13,22 @@ from timeit import default_timer as timer
 import os 
 import pickle
 import csv
-import gc
-
-MAX_DOCID = 1254065
 
 import sys
 
-import psutil  # Импортируем библиотеку psutil для мониторинга памяти
+import psutil  # Для мониторинга памяти
 
 TOTAL_RELEVANT = []
-EXPECTED_SYBMBOLS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789"
 
-def print_memory_usage():
+def print_memory_usage(start_message = ""):
+    print(start_message, end="")
     process = psutil.Process(os.getpid())
     memory_info = process.memory_info()
     print(f"Используемая память: {memory_info.rss / (1024 * 1024):.2f} MB")
 
-def onle_expected_symbols(word):
-    global EXPECTED_SYBMBOLS
-    for char in word:
-        if char not in EXPECTED_SYBMBOLS:
-            return False
-    return True
-
 def preprocess(text):
     from nltk import tokenize
 
-    # Tokenize
     tokenizer = tokenize.RegexpTokenizer(r'\w+')
     tokens = tokenizer.tokenize(text)
 
@@ -65,24 +54,19 @@ def is_relevant(row):
         return 1
     return 0
 
+def write_index(args, index):
+    print(f"Размер индекса перед записью {sys.getsizeof(index) / (1024 * 1024)} MB")
+    if not os.path.exists(args.index_dir):
+        os.makedirs(args.index_dir)
+    with open(args.index_dir + "/index.pkl", "wb") as file_index:
+        pickle.dump(index, file_index)
 
-def write_index(path, index):
-    # total_index = []
-    print(f"Размер индекса в MB {sys.getsizeof(index) / (1024 * 1024)}")
-
-    # for key in sorted(index):
-    #     total_index.append([key, *sorted(index[key])])
-    with open("test.pkl", "wb") as file:
-        pickle.dump(index, file)
-    # print(f"Размер преобразованного индекса в MB {sys.getsizeof(total_index) / (1024 * 1024)}")
-
-
-def read_index(path):
+def read_index(args):
     index = {}
-    with open(path, "rb") as file:
-        index = pickle.load(file)
+    with open(args.index_dir + "/index.pkl", "rb") as file_index:
+        index = pickle.load(file_index)
+    print(f"Размер индекса после чтения {sys.getsizeof(index) / (1024 * 1024)} MB")
     return index
-
 
 def main():
     global TOTAL_RELEVANT
@@ -94,10 +78,7 @@ def main():
     args = parser.parse_args()
 
     start = timer()
-    # write_index("test.txt", {'c': [1, 2, 3], 'a': [5, 6], 'b': [10]})
-    # print(read_index("test.txt"))
-    # return
-    print_memory_usage()
+    print_memory_usage("Начало программы. ")
     if args.build_index:
         index = dict()
         with open(args.data_dir + "/vkmarco-docs.tsv", "r") as pages:
@@ -107,31 +88,15 @@ def main():
                 docid = transform_docid(docid)
                 total_text = preprocess(title + " " + body)
                 for word in total_text:
-                    if not onle_expected_symbols(word):
-                        continue
                     if word not in index:
                         index[word] = [docid]
                     else:
                         index[word].append(docid)
-        gc.collect()
-        if not os.path.exists(args.index_dir):
-            os.makedirs(args.index_dir)
-        print_memory_usage()
-        write_index("test.pkl", index)
+        write_index(args, index)
 
     else:
-        # index = read_index("test.txt")
-        index = {}
-        print_memory_usage()
-        with open("test.pkl", "rb") as file:
-            index = pickle.load(file)
-            gc.collect()
-        # with open(args.index_dir + "/index.pkl", "rb") as file_index:
-        #     index = pickle.load(file_index)
-        print(f"Размер индекса в MB {sys.getsizeof(index) / (1024 * 1024)}")
-        print_memory_usage()
-        return 
-        print_memory_usage()
+        index = read_index(args)
+        print_memory_usage("После чтения. ")
         with open(args.data_dir + "/vkmarco-doceval-queries.tsv", "r") as querys:
             for line in querys:
                 fields = line.rstrip('\n').split('\t')
@@ -140,7 +105,7 @@ def main():
                 relevant_docs = get_relevant_docs(query_words, index)
                 for doc in relevant_docs:
                     TOTAL_RELEVANT.append((query_id, doc))
-        print_memory_usage()
+        print_memory_usage("После чтения и обработки запросов. ")
         result = []
         with open(args.data_dir + "/objects.csv", newline='', encoding='utf-8') as csv_file:
             csv_reader = csv.reader(csv_file)            
@@ -152,7 +117,7 @@ def main():
                     result.append((ObjectId, 1))
                 else:
                     result.append((ObjectId, 0))
-        print_memory_usage()
+        print_memory_usage("После маппинга ответов. ")
         with open(args.data_dir + "/" + args.submission_file, mode='w', newline='', encoding='utf-8') as file:
             csv_writer = csv.writer(file)
             csv_writer.writerow(['ObjectId', 'Label'])
@@ -161,7 +126,7 @@ def main():
 
     elapsed = timer() - start
     print(f"finished, elapsed = {elapsed:.3f}")
-    print_memory_usage()
+    print_memory_usage("Завершение программы. ")
 
 if __name__ == "__main__":
     main()
