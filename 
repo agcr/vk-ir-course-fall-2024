@@ -1,0 +1,285 @@
+[33mcommit 6c5d9ce64dcfc8eb33d233c6a1a14344c9ab44b7[m[33m ([m[1;36mHEAD -> [m[1;32mhw-06-text-ranking-p2[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Thu Nov 7 13:50:29 2024 +0300
+
+    Update requirements for text ranking p2 seminar
+
+[33mcommit d580a1fa37cfaa3d6fe98334eae63bddb454aba3[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Wed Nov 6 05:31:22 2024 +0300
+
+    Improve text ranking p2 seminar
+
+[33mcommit 02b35dfbcaa44556d570e71739193f559574b2a7[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Fri Nov 1 13:10:33 2024 +0300
+
+    Small fix in text ranking seminar
+
+[33mcommit 16719dffebc7b8817a01c928eda0a2de8feb142e[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Mon Oct 28 12:16:30 2024 +0300
+
+    Add requirements for text ranking p2 seminar
+
+[33mcommit 9fb6f5896493e11bcbd8708be91246c80b8f8417[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Mon Oct 28 12:15:33 2024 +0300
+
+    Improve DCG example
+
+[33mcommit aac1d4e3d549d02b35f8c19773355574865c46f7[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Mon Oct 28 11:55:15 2024 +0300
+
+    Actualize text ranking seminar p1
+
+[33mcommit a25ddd3901d4ea019f15564cae1fd2e4af48c5cd[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Mon Oct 28 11:44:45 2024 +0300
+
+    Move ranking metrics example to seminar #6
+
+[33mcommit c0493c93ed2d5c4c2c99c2bbaebb2e3a063e4b30[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Sat Oct 26 20:18:45 2024 +0300
+
+    Add LSA example
+
+[33mcommit 5bf168502e27353b8db909fca45afa5cb3a113c5[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Sat Oct 26 16:43:27 2024 +0300
+
+    Add custom vectorizers example
+
+[33mcommit aa3e3223c64c0693b00b09ab41046aa889f2929c[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Fri Oct 25 03:52:42 2024 +0300
+
+    Add text preprocessing example using NLTL, spaCy and pymorphy libraries
+
+[33mcommit a3fabbdf20d6657fd0ecbbb0424862ca9f0a6c1d[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Fri Oct 25 02:11:59 2024 +0300
+
+    Improve IDF example
+
+[33mcommit 84ac23eeff8aab6a7e2f0cb6a5c3aead0397e1e9[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Fri Oct 25 02:11:39 2024 +0300
+
+    Add sklearn vectorizers example
+
+[33mcommit 8593ca79d67f32789a9ee9ec8c870b3f27405e44[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Fri Oct 25 00:04:18 2024 +0300
+
+    Actualize text ranking seminar's requirements
+
+[33mcommit 65544adb10a97358b9650ef998391bb3c404e128[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Fri Oct 25 00:03:25 2024 +0300
+
+    Add IDF example to text ranking seminar
+
+[33mcommit 3c019d46182c9e5b21404611c4b56f10db8111be[m
+Merge: 0723ea3 1d127be
+Author: agcr <agcr.dev@gmail.com>
+Date:   Thu Oct 24 12:58:30 2024 +0300
+
+    Merge pull request #9 from arinakosovskaia/main
+    
+    Add spell checker tutorial
+
+[33mcommit 1d127be19ba8601d8d0720d510548e1cfdc07d84[m
+Author: arinakosovskaia <114249608+arinakosovskaia@users.noreply.github.com>
+Date:   Thu Oct 24 02:43:31 2024 +0300
+
+    Update requirements.txt
+
+[33mcommit 71e792fe658553bcb28ab3829fc3c5788c7e09cd[m
+Author: arinakosovskaia <ariina.kosovskaya@gmail.com>
+Date:   Thu Oct 24 02:38:12 2024 +0300
+
+    Add spell checker tutorial
+
+[33mcommit 0723ea317f3edb3320a41b57ee9bb4ac737e3d77[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Wed Oct 23 05:08:48 2024 +0300
+
+    Actualize text ranking seminar
+
+[33mcommit d3bbb94a2b696221f5d303c5620419539d4ee1c4[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Wed Oct 23 05:08:20 2024 +0300
+
+    Improve README
+
+[33mcommit 79091ad61c01472a4fc05cf7b4c977fa4cfbe8ed[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Wed Oct 23 05:07:57 2024 +0300
+
+    Add jupyter checkpoints to .gitignore
+
+[33mcommit 4fe2c1eb22d9e2818f78988591a5734083911506[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Wed Oct 16 13:39:08 2024 +0300
+
+    Cosmetic fixes in homework descriptions
+
+[33mcommit eaf7490f2aaea7428a3fd2e355e6e51d01b33b2b[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Wed Oct 16 13:36:28 2024 +0300
+
+    Cosmetic fixes in homework descriptions
+
+[33mcommit bdcc4ef2305a65e0934f40f9c0c6d45fb021f419[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Wed Oct 16 13:34:12 2024 +0300
+
+    Add text ranking homework template
+
+[33mcommit cc6864dcadd26935612e7d86382e282991280a1f[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Mon Oct 7 18:38:08 2024 +0300
+
+    Small fixes in homework descriptions
+
+[33mcommit cd50003bd9bed480e46592b3cfe35580d1824b4e[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Mon Oct 7 18:37:48 2024 +0300
+
+    Add LTR homework template
+
+[33mcommit 2e091a6535ddfc6248a90c82a6dc0657ec423511[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Mon Oct 7 01:24:23 2024 +0300
+
+    Fix indexing homework description
+
+[33mcommit 9dc3fa90454b8476c705652133f418410ceedabb[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Mon Oct 7 00:00:32 2024 +0300
+
+    Improve nn-reranking homework template
+
+[33mcommit bd6387a8f2db5720dfbefd20e26cf31dea909f4f[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Sun Oct 6 23:56:09 2024 +0300
+
+    Add indexing homework template
+
+[33mcommit ba5c58c5a04b4c6b7eca403024f397c605d8760e[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Tue Oct 1 19:01:10 2024 +0300
+
+    Fix nn-reranking homework description
+
+[33mcommit 3870a531583b5e95e44ef8a9072bd1747d6da135[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Tue Oct 1 18:57:24 2024 +0300
+
+    Add nn-reranking homework template
+
+[33mcommit 5c95c7168595db5ba0643e85d997d6410a3d669c[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Mon Sep 30 11:50:32 2024 +0300
+
+    Update venv instructions in README
+
+[33mcommit ecf8983ec7f2ace01e6583941426545e61a19e1b[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Mon Sep 30 11:37:36 2024 +0300
+
+    Update .gitignore
+
+[33mcommit af98dadfdbb2779135d2f881fd80127bc2dd2558[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Mon Sep 30 11:34:57 2024 +0300
+
+    Update .gitignore
+
+[33mcommit 944d103377f98a4b2b8076f72a8a92c78dfb5a89[m
+Merge: b9d8cf6 84bc4b6
+Author: agcr <agcr.dev@gmail.com>
+Date:   Thu Aug 29 14:29:49 2024 +0300
+
+    Merge pull request #8 from GungnirAP/main
+    
+    Updated seminars 09 and 10
+
+[33mcommit b9d8cf60d0594a7b170b95b313986e44616092f1[m
+Merge: 4fc6599 455e29c
+Author: agcr <agcr.dev@gmail.com>
+Date:   Thu Aug 29 14:28:12 2024 +0300
+
+    Merge pull request #7 from Ivan-mech99/main
+    
+    Vector search seminar update
+
+[33mcommit 84bc4b6bbdfca128a3509ca692c02d317154d86d[m
+Merge: f44eeab 4fc6599
+Author: Stanislav Petrov <50638944+GungnirAP@users.noreply.github.com>
+Date:   Wed Aug 28 13:47:19 2024 +0300
+
+    Merge branch 'agcr:main' into main
+
+[33mcommit f44eeab54092ae21e5f894ca9306f4cd6f3478ed[m
+Author: stanislav.petrov <stanislav.petrov@vk.team>
+Date:   Wed Aug 28 13:46:14 2024 +0300
+
+    Updated seminars 09 and 10
+
+[33mcommit 455e29ccd506a207e861fa4803485a277cc7334a[m
+Author: Ivan-mech99 <58103054+Ivan-mech99@users.noreply.github.com>
+Date:   Tue Aug 27 22:25:45 2024 +0300
+
+    Add files via upload
+
+[33mcommit 4fc659920d09f2d1893265fd364442a5b4c1f5c8[m
+Merge: 982e794 e1b6723
+Author: agcr <agcr.dev@gmail.com>
+Date:   Tue Aug 27 11:10:50 2024 +0300
+
+    Merge pull request #6 from arinakosovskaia/main
+    
+    add tutorial's draft
+
+[33mcommit e1b672324702c9b2d23e666228129fd070ca032d[m
+Author: arinakosovskaia <ariina.kosovskaya@gmail.com>
+Date:   Mon Aug 26 12:47:40 2024 +0300
+
+    Update .gitignore
+
+[33mcommit 6c4a309f51ff5e3e743f68515a8555c7ed7a8398[m
+Author: arinakosovskaia <ariina.kosovskaya@gmail.com>
+Date:   Mon Aug 26 12:45:28 2024 +0300
+
+    Add tutorial's draft
+
+[33mcommit 982e7944d13e28b9bb3398304345062be14bffa8[m
+Author: agcr <agcr.dev@gmail.com>
+Date:   Fri Aug 23 02:31:35 2024 +0300
+
+    Update README
+
+[33mcommit c5c2fa9faf534d7ede51697ce94ef0e80be00edb[m
+Merge: 9a47e6d f12ea88
+Author: agcr <agcr.dev@gmail.com>
+Date:   Fri Aug 23 02:27:24 2024 +0300
+
+    Merge pull request #5 from VictorDotZ/07-behaviour-ranking
+    
+    07 behaviour ranking
+
+[33mcommit 9a47e6d42391fef56190d01b5faec362fb71e135[m
+Merge: f0b76ae cc957d5
+Author: agcr <agcr.dev@gmail.com>
+Date:   Fri Aug 23 02:24:23 2024 +0300
+
+    Merge pull request #4 from GungnirAP/main
+    
+    Added seminars 09 and 10
+
+[33mcommit f12ea88ac5eddaa44155b53bba38cc91d59eedc1[m
+Au
