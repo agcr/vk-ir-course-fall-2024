@@ -3,9 +3,13 @@
 """Indexing homework solution"""
 
 import argparse
+import pickle
+from itertools import chain
 from timeit import default_timer as timer
+import pandas as pd
 
 from nltk import tokenize
+
 
 def preprocess(text):
     # Tokenize
@@ -14,6 +18,7 @@ def preprocess(text):
 
     # Normalize
     return [token.lower() for token in tokens]
+
 
 def main():
     # Парсим опции командной строки
@@ -33,7 +38,19 @@ def main():
         # - загрузить тексты документов из файла args.data_dir/vkmarco-docs.tsv
         # - проиндексировать эти тексты, причем для разбиения текстов на слова (термины) надо воспользоваться функцией preprocess()
         # - сохранить получивший обратный индекс в папку переданную через параметр args.index_dir
-        pass
+        with open(args.data_dir + '/vkmarco-docs.tsv', 'rb') as f:
+            data = pd.read_csv(f, sep='\t', names=['doc_id', 'url', 'doc_title', 'doc_text'])
+        doc_texts = (data['doc_title'].fillna('') + ' ' + data['doc_text']).tolist()
+        doc_ids = data['doc_id'].tolist()
+        doc_terms = [preprocess(t) for t in doc_texts]
+        reverse_index = {t: set() for t in chain.from_iterable(doc_terms)}
+        for i in range(len(doc_ids)):
+            for t in doc_terms[i]:
+                reverse_index[t].add(doc_ids[i])
+        reverse_index['doc_ids'] = doc_ids
+        with open(args.index_dir + '/index.pkl', 'wb') as f:
+            pickle.dump(reverse_index, f)
+
     else:
         # Тут вы должны:
         # - загрузить поисковые запросы из файла args.data_dir/vkmarco-doceval-queries.tsv
@@ -42,7 +59,49 @@ def main():
         # - сформировать ваш сабмишн, в котором для каждого объекта (пары запрос-документ) будет проставлена метка 1 (в документе есть все слова из запроса) или 0
         #
         # Для формирования сабмишна надо загрузить и использовать файлы args.data_dir/sample_submission.csv и args.data_dir/objects.csv
-        pass
+        with open(args.data_dir + '/vkmarco-doceval-queries.tsv', 'rb') as f:
+            data = pd.read_csv(f, sep='\t', names=['query_id', 'query_text'])
+        with open(args.index_dir + '/index.pkl', 'rb') as f:
+            reverse_index = pickle.load(f)
+        with open(args.data_dir + '/objects.csv', 'rb') as f:
+            objects = pd.read_csv(f)
+
+        # Сохраним информацию об объектах, чтоб потом не тыкать датафрейм
+        object_dict = {}
+        for _, row in objects.iterrows():
+            key = (row['QueryId'], row['DocumentId'])
+            object_dict[key] = row['ObjectId']
+        all_object_ids = objects['ObjectId'].unique()
+
+        submission_data = {}
+        queries = data['query_text'].tolist()
+        query_ids = data['query_id'].tolist()
+        query_terms = [preprocess(t) for t in queries]
+
+        for i in range(len(query_ids)):
+            # для каждого запроса будем пересекать значения для терминов,
+            # если для какого-то сет пуст - пуст и для запроса
+            if query_terms[i][0] not in reverse_index:
+                inter = set()
+            else:
+                inter = reverse_index[query_terms[i][0]]
+                for j in range(1, len(query_terms[i])):
+                    term = query_terms[i][j]
+                    if term in reverse_index:
+                        inter = inter.intersection(reverse_index[term])
+                    else:
+                        inter = set()
+                        break
+            for doc in inter:
+                key = (query_ids[i], doc)
+                if key in object_dict:
+                    obj_id = object_dict[key]
+                    submission_data[obj_id] = 1
+        for obj_id in all_object_ids:
+            if obj_id not in submission_data:
+                submission_data[obj_id] = 0
+        submission_df = pd.DataFrame(list(submission_data.items()), columns=['ObjectId', 'Label'])
+        submission_df.to_csv(args.submission_file, index=False)
 
     # Репортим время работы скрипта
     elapsed = timer() - start
