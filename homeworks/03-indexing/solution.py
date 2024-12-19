@@ -32,14 +32,61 @@ def build_index(docs, docsids):
             postings = inverted_index.setdefault(word, set())
             postings.add(docsids[next_doc_id])
         next_doc_id += 1
-    return inverted_index
+
+    # create dictionary as a long line
+    sorted_words = sorted(inverted_index.keys())
+    dictionary = ''.join(sorted_words)
+    # create auxiliary list with start position and docs list
+    aux_list = []
+    word_pos = 0
+    for word in sorted_words:
+        aux_list.append([word_pos, sorted(list(inverted_index[word]))])
+        word_pos += len(word)
+    
+    return dictionary, aux_list
 
 
-def search(query, inverted_index):
+def find_postings(term, dictionary, aux_list):
+    left = -1
+    right = len(aux_list)
+    dic_size = len(dictionary)
+    aux_list_size = len(aux_list)
+    while right - left > 1:
+        middle = (left + right) // 2
+        ini_word_pos = aux_list[middle][0]
+        end_word_pos = aux_list[middle+1][0] if middle+1 < aux_list_size else dic_size
+        current_term = dictionary[ini_word_pos:end_word_pos]
+        if current_term == term:
+            return aux_list[middle][1]
+        elif current_term < term:
+            left = middle
+        else:
+            right = middle
+    return []
+
+
+def find_intersection(list_a, list_b):
+    i, j = 0, 0
+    result = []
+    size_list_a = len(list_a)
+    size_list_b = len(list_b)
+    while i < size_list_a and j < size_list_b:
+        if list_a[i] < list_b[j]:
+            i += 1
+        elif list_a[i] > list_b[j]:
+            j += 1
+        else:
+            result.append(list_a[i])
+            i += 1
+            j += 1
+    return result
+
+
+def search(query, dictionary, aux_list):
     results = None
     for word in query:
-        postings = inverted_index.get(word, set())
-        results = results & postings if results is not None else postings
+        postings = find_postings(word, dictionary, aux_list)
+        results = find_intersection(results, postings) if results is not None else postings
     return results
 
 
@@ -79,19 +126,23 @@ def main():
         display_progress(start, docs_counter, 'documents')
         # - сохранить получивший обратный индекс в папку переданную через параметр args.index_dir
         
-        print("\nSaving inverted index doc file")
-        docs_index = f'{args.index_dir}/docs_index.pkl'
+        print("\nSaving inverted index doc files")
         if not os.path.exists(args.index_dir):
             os.mkdir(args.index_dir)
-        with open(docs_index, 'wb') as file:
+        aux_list_file = f'{args.index_dir}/auxiliary_list.pkl'
+        dictionary_file = f'{args.index_dir}/dictionary_long_text.txt'
+        with open(aux_list_file, 'wb') as list_file, open(dictionary_file, 'w', encoding='utf-8') as long_text_file:
             # file.write(str(build_index(token_docs)))
-            pickle.dump(build_index(token_docs, ids_docs), file)
+            dictionary, aux_list = build_index(token_docs, ids_docs)
+            pickle.dump(aux_list, list_file)
+            long_text_file.write(dictionary)
     else:
-        print("Opening inverted index doc file")
-        docs_index = f'{args.index_dir}/docs_index.pkl'
-        with open(docs_index, 'rb') as file:
-            # inverted_index = [f.rstrip() for f in file.readlines()]
-            inverted_index = pickle.load(file)
+        print("Opening inverted index doc files")
+        aux_list_file = f'{args.index_dir}/auxiliary_list.pkl'
+        dictionary_file = f'{args.index_dir}/dictionary_long_text.txt'
+        with open(aux_list_file, 'rb') as list_file, open(dictionary_file, encoding='utf-8') as long_text_file:
+            aux_list = pickle.load(list_file)
+            dictionary = long_text_file.read()
         # Тут вы должны:
         # - загрузить поисковые запросы из файла args.data_dir/vkmarco-doceval-queries.tsv
         # - прогнать запросы через индекс и, для каждого запроса, найти все документы, в которых есть все слова (термины) из запроса.
@@ -105,7 +156,7 @@ def main():
                 # - для разбиения текстов запросов на слова тоже используем функцию preprocess()
                 preprocessed_query = preprocess(query_text)
 
-                result.append(search(preprocessed_query, inverted_index))
+                result.append(search(preprocessed_query, dictionary, aux_list))
                 query_idres[int(queryidx)] = id_res_counter
                 id_res_counter += 1
         # - для разбиения текстов запросов на слова тоже используем функцию preprocess()
@@ -117,7 +168,7 @@ def main():
         print("\nGenerating submission file")
         obj_numerate = f'{args.data_dir}/objects.csv'
         # sample_submission_file = f'{args.data_dir}/sample_submission.csv'   # it seems the file is ordered so there is no need to upload
-        submission_file = f'{args.data_dir}/submission.csv'
+        submission_file = f'{args.submission_file}'
         total_res = 0
         with open(obj_numerate, encoding='utf-8') as objects, open(submission_file, 'w', encoding='utf-8') as fsub:
             next(objects)   # skip header
