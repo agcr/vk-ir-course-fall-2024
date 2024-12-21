@@ -11,8 +11,10 @@ import catboost
 
 def read_dataframe(args, filename):
     df = pd.read_csv(os.path.join(args.data_dir, filename), sep=' ', header=None)
-    df.columns = ['target', 'id'] + [i for i in range(df.shape[1] - 2)]
+    df.columns = ['target', 'id'] + [str(i) for i in range(df.shape[1] - 2)]
     df['id'] = df['id'].apply(lambda x: int(x.split(':')[1]))
+    for i in range(df.shape[1] - 2):
+        df[str(i)] = df[str(i)].apply(lambda x: float(x.split(':')[1]))
     return df
 
 
