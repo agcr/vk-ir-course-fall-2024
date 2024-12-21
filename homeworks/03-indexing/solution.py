@@ -69,8 +69,6 @@ def main():
     # Какой у нас режим: построения индекса или генерации сабмишна?
     if args.build_index:
         print('Building index')
-        # Тут вы должны:
-        # - загрузить тексты документов из файла args.data_dir/vkmarco-docs.tsv
         filename = os.path.join(args.data_dir, "vkmarco-docs.tsv")
         df = pd.read_csv(filename, sep='\t', names=['id', 'url', 'title', 'body'])
         df['id'] = df['id'].apply(lambda x: int(x[1:]))
@@ -80,13 +78,11 @@ def main():
         df.fillna("", inplace=True)
         dictionary = defaultdict(list)
         for index, row in df.iterrows():
-            # - проиндексировать эти тексты, причем для разбиения текстов на слова (термины) надо воспользоваться функцией preprocess()
             for word in preprocess(row.text):
                 dictionary[word].append(index)
         dictionary = dict(dictionary)
         for key in dictionary.keys():
             dictionary[key].sort()
-        # - сохранить получивший обратный индекс в папку, переданную через параметр args.index_dir
         if not os.path.exists(args.index_dir):
             os.makedirs(args.index_dir)
         with open(os.path.join(args.index_dir, INDEX_FILE_NAME), 'w') as out:
