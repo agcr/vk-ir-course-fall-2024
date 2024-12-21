@@ -1,15 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """Indexing homework solution"""
-
-import argparse
 import os
+import re
 
-import pandas as pd
-from timeit import default_timer as timer
-from collections import defaultdict
-
-from nltk import tokenize
 
 def intersect(a, b):
     res = []
@@ -27,9 +21,19 @@ def intersect(a, b):
     return res
 
 def preprocess(text):
+
+    # code from source files of nltk.tokenize
+    # because importing of nltk.tokenize takes nearly 121 mb of memory
+    # checked using https://pypi.org/project/memory-profiler/
+
+    def check_regexp(pattern):
+        return re.compile(pattern, re.UNICODE | re.MULTILINE | re.DOTALL)
+
+    def tokenize(pattern, text):
+        return check_regexp(pattern).findall(text)
+
     # Tokenize
-    tokenizer = tokenize.RegexpTokenizer(r'\w+')
-    tokens = tokenizer.tokenize(text)
+    tokens = tokenize(r'\w+', text)
 
     # Normalize
     return [token.lower() for token in tokens]
@@ -55,6 +59,9 @@ def process_query(query, args):
 INDEX_FILE_NAME = "index_file.txt"
 
 def main():
+    import argparse
+    from timeit import default_timer as timer
+
     # Парсим опции командной строки
     parser = argparse.ArgumentParser(description='Indexing homework solution')
     parser.add_argument('--submission_file', help='output Kaggle submission file')
@@ -68,6 +75,9 @@ def main():
 
     # Какой у нас режим: построения индекса или генерации сабмишна?
     if args.build_index:
+        import pandas as pd
+        from collections import defaultdict
+
         print('Building index')
         filename = os.path.join(args.data_dir, "vkmarco-docs.tsv")
         df = pd.read_csv(filename, sep='\t', names=['id', 'url', 'title', 'body'])
