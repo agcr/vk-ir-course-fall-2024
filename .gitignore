@@ -11,3 +11,6 @@ __pycache__/
 .DS_Store
 .vim
 .ipynb_checkpoints
+
+homeworks/03-indexing/inverted_index.txt
+homeworks/03-indexing/datasets/
