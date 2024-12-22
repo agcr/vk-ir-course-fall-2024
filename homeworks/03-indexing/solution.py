@@ -125,7 +125,7 @@ def main():
 		if not all_words_batches:
 			print("No index")
 			return
-		objs_chunks = pd.read_csv(args.data_dir + "/objects.csv", chunksize=9025)
+		objs_chunks = pd.read_csv(os.path.join(args.data_dir, "objects.csv"), chunksize=9025)
 		print("Generating submission")
 		queries = pd.read_csv(args.data_dir + "/vkmarco-doceval-queries.tsv", sep="\t", header=None, chunksize=10)
 		progress = tqdm.tqdm(total=100)
@@ -141,9 +141,10 @@ def main():
 				objs_df.iloc[:, 0] = objects.iloc[:, 0]
 				objs_df.iloc[np.where(np.isin(objects["DocumentId"], np.asarray(list(docs))))[0], 1] = 1
 				if ind == 0 and i == 0:
-					objs_df.to_csv("submission.csv", header=True, index=False)
+					objs_df.to_csv(args.submission_file, header=True, index=False)
 				else:
-					objs_df.to_csv("submission.csv", mode='a', header=False, index=False)
+					objs_df.to_csv(args.submission_file, mode='a', header=False,
+					               index=False)
 				del objs_df
 				progress.update()
 
