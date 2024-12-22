@@ -12,3 +12,4 @@ rank_bm25
 spacy
 nltk
 razdel
+pymorphy3
