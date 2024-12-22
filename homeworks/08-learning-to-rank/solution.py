@@ -12,8 +12,8 @@ import pandas as pd
 import tqdm
 
 DEFAULT_PARAMS = {
-    'iterations': 20000,
-    'early_stopping_rounds': 1800,
+    'iterations': 46000,
+    'early_stopping_rounds': 5000,
     'eval_metric': 'NDCG:top=10;type=Exp',
     'random_seed': 42,
     'verbose': 10,
@@ -23,7 +23,7 @@ DEFAULT_PARAMS = {
 
 def create_model(loss_function, path):
     params = copy.deepcopy(DEFAULT_PARAMS)
-    catboost_info_dir = f"/tmp/catboost_info.{loss_function.lower()}"
+    catboost_info_dir = "C:\\Users\\GigaChad\\Documents\\Github\\vk-ir-course-fall-2024\data"+f"/catboost_info.{loss_function.lower()}"
     params.update({
         'loss_function': loss_function,
         'train_dir': str(catboost_info_dir),
@@ -79,8 +79,10 @@ def main():
         # - обучить модель с использованием train- и dev-сплитов датасета
         # - при необходимости, подобрать гиперпараметры
         # - сохранить обученную модель в файле args.model_file
-        df_train = proceed_file(args.data_dir + '/train.txt')
-        df_vali = proceed_file(args.data_dir + '/vali.txt')
+        # df_train = proceed_file(args.data_dir + '/train.txt')
+        # df_vali = proceed_file(args.data_dir + '/vali.txt')
+        df_train = pd.read_csv(args.data_dir+'/catboost/train.csv')
+        df_vali = pd.read_csv(args.data_dir+'/catboost/vali.csv')
 
         X_train, y_train, q_train = to_catboost_dataset(df_train)
         X_vali, y_vali, q_vali = to_catboost_dataset(df_vali)
