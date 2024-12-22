@@ -2,4 +2,5 @@ click==8.1.7
 joblib==1.4.2
 nltk==3.9.1
 regex==2024.9.11
-tqdm==4.66.5
+tqdm==4.67.0
+argparse==1.1
