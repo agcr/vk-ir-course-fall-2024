@@ -80,7 +80,7 @@ def create_model(loss_function):
     params = copy.deepcopy(DEFAULT_PARAMS)
 
     # Временная директория для хранения информации catboost во время train
-    catboost_info_dir = f"homeworks/08-learning-to-rank/catboost_info.{loss_function.lower()}"
+    catboost_info_dir = f"tmp/catboost_info.{loss_function.lower()}"
 
     params.update({
         'loss_function': loss_function,
