@@ -4,7 +4,6 @@
 
 import argparse
 import copy
-import os
 from timeit import default_timer as timer
 
 import catboost
@@ -13,8 +12,8 @@ import pandas as pd
 import tqdm
 
 DEFAULT_PARAMS = {
-    'iterations': 5000,
-    'early_stopping_rounds': 100,
+    'iterations': 20000,
+    'early_stopping_rounds': 1800,
     'eval_metric': 'NDCG:top=10;type=Exp',
     'random_seed': 42,
     'verbose': 10,
@@ -22,9 +21,9 @@ DEFAULT_PARAMS = {
 }
 
 
-def create_model(loss_function):
+def create_model(loss_function, path):
     params = copy.deepcopy(DEFAULT_PARAMS)
-    catboost_info_dir = f"/tmp/hw-08-learning-rank/catboost_info.{loss_function.lower()}"
+    catboost_info_dir = f"/tmp/catboost_info.{loss_function.lower()}"
     params.update({
         'loss_function': loss_function,
         'train_dir': str(catboost_info_dir),
@@ -89,7 +88,7 @@ def main():
         pool_train = catboost.Pool(data=X_train, label=y_train, group_id=q_train)
         pool_vali = catboost.Pool(data=X_vali, label=y_vali, group_id=q_vali)
 
-        model = create_model('YetiRank')
+        model = create_model('YetiRank', args.data_dir)
 
         start_fit = timer()
         model.fit(pool_train, eval_set=pool_vali, use_best_model=True)
