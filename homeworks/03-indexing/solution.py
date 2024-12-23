@@ -62,7 +62,7 @@ def main():
         # Тут вы должны:
         # - загрузить поисковые запросы из файла args.data_dir/vkmarco-doceval-queries.tsv
         with open(f'{args.data_dir}/vkmarco-doceval-queries.tsv', 'r', encoding='utf-8') as file:
-            doceval_queries = file.readlines()
+            doceval_queries = list(csv.reader(file, delimiter='\t'))
         
         with open(f'{args.index_dir}/inverted_index.txt', 'r', encoding='utf-8') as file:
             file_lines = file.readlines()
@@ -87,7 +87,7 @@ def main():
         # - для разбиения текстов запросов на слова тоже используем функцию preprocess()
         query_doc = {}
 
-        with open('./datasets/objects.csv', 'r', encoding='utf-8') as file:
+        with open(f'{args.data_dir}/objects.csv', 'r', encoding='utf-8') as file:
             reader = csv.reader(file)
             next(reader)  # Пропускаем заголовок
             for parts in reader:
