@@ -11,3 +11,4 @@ __pycache__/
 .DS_Store
 .vim
 .ipynb_checkpoints
+.idea
