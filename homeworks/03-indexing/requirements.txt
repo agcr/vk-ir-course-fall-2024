@@ -1,5 +1,6 @@
-click==8.1.7
-joblib==1.4.2
-nltk==3.9.1
-regex==2024.9.11
-tqdm==4.66.5
+numpy==2.2.1
+pandas==2.2.3
+python-dateutil==2.9.0.post0
+pytz==2024.2
+six==1.17.0
+tzdata==2024.2
