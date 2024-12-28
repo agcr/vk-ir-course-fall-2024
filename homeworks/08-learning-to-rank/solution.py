@@ -16,14 +16,13 @@ from catboost import datasets, utils
 EVAL_METRIC = 'NDCG:top=5;type=Exp'
 
 DEFAULT_PARAMS = {
-    'iterations': 30000,
-    'early_stopping_rounds': 4000,
+    'iterations': 60000,
+    'early_stopping_rounds': 10000,
     'eval_metric': EVAL_METRIC,
     'random_seed': 52,
-    'verbose': 1000,
+    'verbose': 10,
     'task_type': 'GPU'
 }
-
 
 def generate_column_names(num_features):
     columns = ['label', 'qid']
@@ -31,7 +30,6 @@ def generate_column_names(num_features):
         column = f"feature_{i+1}"
         columns.append(column)
     return columns
-
 
 def read_dataframe(data_dir, filename):
     df = pd.read_csv(os.path.join(data_dir, filename), sep=' ', header=None)
@@ -41,31 +39,30 @@ def read_dataframe(data_dir, filename):
 
     # qid 0:1 -> qid 1
     df['qid'] = df['qid'].apply(lambda x: int(x.split(':')[1]))
-    
+
     # 0:1 -> feature_i 1
     for i in range(num_features):
         feature_col = f"feature_{i+1}"
         df[feature_col] = df[feature_col].apply(lambda x: float(x.split(':')[1]))
-    
-    return df
 
+    return df
 
 def load_or_create_dataframe(data_dir, input_filename, processed_filename):
     processed_filepath = os.path.join(data_dir, processed_filename)
-    
+
     # Проверка, существует ли предварительно сохранённый CSV
     if os.path.exists(processed_filepath):
         print(f"Loading processed data from {processed_filepath}")
         return pd.read_csv(processed_filepath)
-    
+
     # Если CSV не существует, загружаем и обрабатываем оригинальный файл
     print(f"Processing raw data from {input_filename}")
     df = read_dataframe(data_dir, input_filename)
-    
+
     # Сохраняем обработанный DataFrame для ускорения последующих загрузок
     print(f"Saving processed data to {processed_filepath}")
     df.to_csv(processed_filepath, index=False)
-    
+
     return df
 
 
@@ -80,7 +77,7 @@ def create_model(loss_function):
     params = copy.deepcopy(DEFAULT_PARAMS)
 
     # Временная директория для хранения информации catboost во время train
-    catboost_info_dir = f"tmp/catboost_info.{loss_function.lower()}"
+    catboost_info_dir = f"/content/catboost_info.{loss_function.lower()}"
 
     params.update({
         'loss_function': loss_function,
@@ -92,7 +89,7 @@ def create_model(loss_function):
 def compute_metrics(y_true, y_hat, q):
     # Список метрик для подсчета
     eval_metrics = ['NDCG:top=5;type=Exp', 'DCG:top=5;type=Exp', 'MAP:top=5']
-    
+
     for eval_metric in eval_metrics:
         scores = utils.eval_metric(y_true, y_hat, eval_metric, group_id=q)
         print(f"metric = {eval_metric} score = {scores[0]:.3f}")
@@ -126,7 +123,7 @@ def main():
         # - сохранить обученную модель в файле args.model_file
         df_train = load_or_create_dataframe(args.data_dir, 'train.txt', 'train_processed.csv')
         df_val = load_or_create_dataframe(args.data_dir, 'vali.txt', 'vali_processed.csv')
-        
+
         X_train, y_train, q_train = to_catboost_dataset(df_train)
         X_val, y_val, q_val = to_catboost_dataset(df_val)
         pool_train = catboost.Pool(data=X_train, label=y_train, group_id=q_train, )
@@ -149,7 +146,7 @@ def main():
 
         df_test = load_or_create_dataframe(args.data_dir, 'test.txt', 'test_processed.csv')
         X_test, y_test, q_test = to_catboost_dataset(df_test)
-        
+
         pool_test = catboost.Pool(data=X_test, group_id=q_test)
         y_pred = model.predict(pool_test)
         compute_metrics(y_test, y_pred, q_test)
