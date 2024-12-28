@@ -8,3 +8,7 @@ scipy==1.14.1
 six==1.16.0
 threadpoolctl==3.5.0
 tzdata==2024.2
+nltk==3.9.1
+pandarallel==1.6.5
+tqdm==4.66.1
+pymorphy3==2.0.2
