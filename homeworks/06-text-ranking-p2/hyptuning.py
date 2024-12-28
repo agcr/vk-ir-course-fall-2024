@@ -171,44 +171,5 @@ def main():
     print(f"\nFinal NDCG@10: {final_ndcg:.3f}")
 
 
-# distances + zones v0.1
-#   0.5879126669881164
-#   small dataset: 0.5877354782070126
-# distances + zones v0.1
-#   title_w: float = 0.3
-#   body_w: float = 0.7
-#   nc: 0.8
-#   0.5883249648597936
-#   nc: 0.9
-#   0.5881310553819236
-#   nc: 0.6
-#   0.5885426164409874
-#   nc: 0.4
-#   0.588634721820811
-#   k1: float = 0.25
-#   b: float = 0.1
-#   0.589
-# bm25f (by claude)
-#   w_title = 0.7  # title weight
-#   w_body = 0.3  # body weight
-#   b_title = 0.5  # title length normalization
-#   b_body = 0.75  # body length normalization
-#   k1 = 2.0
-#   0.5820875936843558
-# bm25f 2
-#   w_title = 0.3  # title weight
-#   w_body = 0.7  # body weight
-#   0.5831006911497113
-# bm25f * distances
-#   0.5784615063806714
-# bm25f + distances
-#   0.5863463321267627
-# bm25f + doc_distance
-#   0.584627303485758
-# bm25f + doc_distance (score * (0.5 + d_title * title_dist + d_body * doc_dist))
-#   d_title = 0.7  # title nearness coefficient
-#   d_body = 0.3  # body nearness coefficient
-#   0.587097535192125
-
 if __name__ == '__main__':
     main()
