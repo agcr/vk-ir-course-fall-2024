@@ -79,11 +79,9 @@ def main():
         # - обучить модель с использованием train- и dev-сплитов датасета
         # - при необходимости, подобрать гиперпараметры
         # - сохранить обученную модель в файле args.model_file
-        # df_train = proceed_file(args.data_dir + '/train.txt')
-        # df_vali = proceed_file(args.data_dir + '/vali.txt')
-        df_train = pd.read_csv(args.data_dir+'/catboost/train.csv')
-        df_vali = pd.read_csv(args.data_dir+'/catboost/vali.csv')
-
+        df_train = proceed_file(args.data_dir + '/train.txt')
+        df_vali = proceed_file(args.data_dir + '/vali.txt')
+        
         X_train, y_train, q_train = to_catboost_dataset(df_train)
         X_vali, y_vali, q_vali = to_catboost_dataset(df_vali)
 
