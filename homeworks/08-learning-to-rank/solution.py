@@ -12,8 +12,8 @@ import pandas as pd
 import tqdm
 
 DEFAULT_PARAMS = {
-    'iterations': 46000,
-    'early_stopping_rounds': 5000,
+    'iterations': 70000,
+    'early_stopping_rounds': 10000,
     'eval_metric': 'NDCG:top=10;type=Exp',
     'random_seed': 42,
     'verbose': 10,
