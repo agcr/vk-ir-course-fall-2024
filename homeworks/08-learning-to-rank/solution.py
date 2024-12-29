@@ -23,7 +23,7 @@ DEFAULT_PARAMS = {
 
 def create_model(loss_function, path):
     params = copy.deepcopy(DEFAULT_PARAMS)
-    catboost_info_dir = "C:\\Users\\GigaChad\\Documents\\Github\\vk-ir-course-fall-2024\data"+f"/catboost_info.{loss_function.lower()}"
+    catboost_info_dir = f"/tmp/catboost_info.{loss_function.lower()}"
     params.update({
         'loss_function': loss_function,
         'train_dir': str(catboost_info_dir),
