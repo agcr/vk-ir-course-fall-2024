@@ -9,3 +9,6 @@ six==1.16.0
 threadpoolctl==3.5.0
 tzdata==2024.2
 ipykernel==6.29.5
+pymorphy3==2.0.2
+pymorphy3-dicts-ru==2.4.417150.4580142
+nltk==3.9.1
